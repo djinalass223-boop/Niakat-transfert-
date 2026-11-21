@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Niakaté Transfer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nuit:#0A1F44; --nuit2:#12305F; --turq:#1CC8C0; --turq-fonce:#0E8F8A;
+  --brume:#F3F7FA; --texte:#0A1F44; --doux:#5A6B85; --surface:#FFFFFF; --trait:#DCE5EE;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--brume:#07142E; --texte:#EAF1F8; --doux:#9FB1C9; --surface:#0E2247; --trait:#1D3664; --turq-fonce:#1CC8C0;}
+}
+:root[data-theme="dark"]{--brume:#07142E; --texte:#EAF1F8; --doux:#9FB1C9; --surface:#0E2247; --trait:#1D3664; --turq-fonce:#1CC8C0;}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--brume);color:var(--texte);font-family:"Source Sans 3",system-ui,sans-serif;font-size:17px;line-height:1.5}
+h1,h2,h3{font-family:Sora,system-ui,sans-serif;margin:0;line-height:1.2}
+.accueil{min-height:100vh;min-height:100svh;background:radial-gradient(120% 70% at 50% 0%,var(--nuit2) 0%,var(--nuit) 70%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden}
+.route{width:100%;max-width:420px;height:auto;margin-top:8px}
+.route path{stroke:var(--turq);stroke-width:2;fill:none;stroke-dasharray:3 7;stroke-linecap:round}
+.route .trace{stroke-dasharray:420;stroke-dashoffset:420;animation:trace 2.4s .3s ease-out forwards;stroke:var(--turq);stroke-width:2.5}
+.route circle{fill:var(--turq)}
+.route .halo{fill:none;stroke:var(--turq);stroke-opacity:.35}
+@keyframes trace{to{stroke-dashoffset:0}}
+.marque{display:flex;flex-direction:column;align-items:center;gap:14px}
+.marque h1{font-size:2rem;font-weight:700;letter-spacing:.2px}
+.marque h1 span{color:var(--turq);font-weight:500}
+.marque p{margin:0;max-width:300px;color:#C5D3E6}
+.actions{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+.btn{font:600 1.05rem "Source Sans 3",system-ui,sans-serif;border-radius:14px;padding:15px 20px;border:2px solid transparent;cursor:pointer;min-height:52px}
+.btn.plein{background:var(--turq);color:var(--nuit)}
+.btn.contour{background:transparent;color:#fff;border-color:#3A5688}
+.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.petit{font-size:.9rem;color:#9FB1C9;margin:4px 0 0}
+.guide{max-width:640px;margin:0 auto;padding:40px 22px 56px}
+.guide h2{font-size:1.5rem;margin-bottom:6px}
+.guide .intro{color:var(--doux);margin:0 0 28px}
+.guide h3{font-size:1.05rem;margin:32px 0 12px}
+.couleurs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.teinte{border-radius:14px;overflow:hidden;background:var(--surface);border:1px solid var(--trait)}
+.teinte i{display:block;height:64px}
+.teinte b{display:block;padding:10px 12px 0;font-family:Sora,sans-serif;font-size:.95rem}
+.teinte small{display:block;padding:0 12px 10px;color:var(--doux)}
+.logos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.logos div{border-radius:14px;padding:22px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:Sora,sans-serif;font-weight:700}
+.logos .sombre{background:var(--nuit);color:#fff}
+.logos .clair{background:#fff;color:var(--nuit);border:1px solid var(--trait)}
+.typo{background:var(--surface);border:1px solid var(--trait);border-radius:14px;padding:18px}
+.typo .t1{font-family:Sora,sans-serif;font-weight:700;font-size:1.6rem}
+.typo p{margin:8px 0 0;color:var(--doux)}
+.toast{z-index:30;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#fff;color:var(--nuit);padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:90%;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.ecran{position:fixed;inset:0;background:var(--brume);color:var(--texte);overflow:auto;display:none;z-index:5;padding:calc(env(safe-area-inset-top,0px) + 16px) 22px calc(env(safe-area-inset-bottom,0px) + 28px)}
+.ecran.on{display:block}
+.cadre{max-width:420px;margin:0 auto}
+.cadre h2{font-size:1.6rem;margin:8px 0 6px}
+.doux{color:var(--doux);margin:0 0 8px}
+.cadre label{display:block;font-weight:600;margin:16px 0 6px}
+.ecran input:not([type=checkbox]){width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--trait);background:var(--surface);color:var(--texte);font:1rem "Source Sans 3",system-ui,sans-serif}
+.ecran input:focus-visible{outline:3px solid var(--turq);outline-offset:1px}
+.champ{display:flex;gap:10px;align-items:center}
+.lien{background:none;border:0;color:var(--turq-fonce);font:600 1rem "Source Sans 3",system-ui,sans-serif;cursor:pointer;padding:8px 0;text-decoration:underline}
+.cadre label.case{display:flex;gap:10px;align-items:center;font-weight:400}
+.btn.bloc{width:100%;margin-top:14px}
+.err{color:#B3261E;min-height:1.4em;margin:12px 0 0;font-weight:600}
+.astuce{background:var(--surface);border:1px dashed var(--turq-fonce);border-radius:12px;padding:10px 12px;margin-top:16px;font-size:.95rem;color:var(--doux)}
+.coche{width:76px;height:76px;border-radius:50%;background:var(--turq);color:var(--nuit);display:grid;place-items:center;font-size:2.2rem;margin:36px 0 12px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#FF8A80}}
+:root[data-theme="dark"] .err{color:#FF8A80}
+.entete{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.entete h2{margin:0}
+.carte{background:linear-gradient(135deg,var(--nuit2),var(--nuit));color:#fff;border-radius:20px;padding:22px;margin:16px 0}
+.carte small{color:#C5D3E6}
+.carte .montant{font:700 2.1rem Sora,system-ui,sans-serif;margin:6px 0 2px}
+.carte .lien{color:var(--turq);padding:4px 0}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.duo .btn{padding:14px 8px;font-size:.98rem;line-height:1.2}
+.cadre h3{font-size:1.05rem;margin:28px 0 12px}
+.pays{display:flex;gap:10px;overflow-x:auto;margin:0 -22px;padding:0 22px 8px}
+.pays button{flex:none;min-width:136px;background:var(--surface);color:var(--texte);border:1px solid var(--trait);border-radius:14px;padding:10px 14px;text-align:left;font:inherit;cursor:pointer}
+.pays b{display:block;font-family:Sora,sans-serif;font-size:.95rem}
+.pays span{color:var(--doux);font-size:.88rem}
+.ligne{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--trait)}
+.av{flex:none;width:42px;height:42px;border-radius:50%;background:var(--nuit2);color:var(--turq);display:grid;place-items:center;font:700 .95rem Sora,sans-serif}
+.qui{flex:1;min-width:0}
+.qui b{display:block}
+.qui small,.mt small{color:var(--doux)}
+.mt{text-align:right;font-weight:600}
+.mt small{display:block;font-weight:400}
+.mt .ok{color:var(--turq-fonce)}
+.ecran select{width:100%;padding:14px;border-radius:12px;border:1.5px solid var(--trait);background:var(--surface);color:var(--texte);font:1rem "Source Sans 3",system-ui,sans-serif}
+.ecran select:focus-visible{outline:3px solid var(--turq);outline-offset:1px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.recap{background:var(--surface);border:1px solid var(--trait);border-radius:16px;padding:4px 16px;margin-top:4px}
+.rl{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--trait)}
+.rl:last-child{border-bottom:0}
+.rl span{color:var(--doux)}
+.rl b{text-align:right}
+.rl.gros span{color:var(--texte);font-weight:600}
+.rl.gros b{font:700 1.3rem Sora,system-ui,sans-serif;color:var(--turq-fonce)}
+.modes{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.mode{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface);color:var(--texte);border:1.5px solid var(--trait);border-radius:16px;padding:14px;font:inherit;cursor:pointer}
+.mode .ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--nuit2);display:grid;place-items:center;font-size:1.4rem}
+.mode b{display:block;font-family:Sora,sans-serif;font-size:.98rem}
+.mode small{color:var(--doux)}
+.mode .rd{margin-left:auto;flex:none;width:22px;height:22px;border-radius:50%;border:2px solid var(--trait)}
+.mode[aria-checked=true]{border-color:var(--turq);box-shadow:0 0 0 1px var(--turq)}
+.mode[aria-checked=true] .rd{border-color:var(--turq);background:radial-gradient(circle,var(--turq) 0 45%,transparent 50%)}
+.mode:focus-visible{outline:3px solid var(--turq);outline-offset:2px}
+.ref{font:700 1.5rem Sora,system-ui,sans-serif;letter-spacing:1px;color:var(--turq-fonce);background:var(--surface);border:1px dashed var(--turq-fonce);border-radius:14px;padding:14px;text-align:center;margin:8px 0 18px}
+.th{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--trait);font-family:Sora,system-ui,sans-serif}
+.badge{background:rgba(28,200,192,.16);color:var(--turq-fonce);border-radius:999px;padding:3px 10px;font:600 .85rem "Source Sans 3",system-ui,sans-serif;white-space:nowrap}
+.pav{width:76px;height:76px;border-radius:50%;background:var(--nuit2);color:var(--turq);display:grid;place-items:center;font:700 1.6rem Sora,system-ui,sans-serif;margin:14px 0 4px}
+.ecran input[readonly]{opacity:.7}
+.succes{color:var(--turq-fonce);min-height:1.4em;margin:12px 0 0;font-weight:600}
+@media (prefers-reduced-motion:reduce){.route .trace{animation:none;stroke-dashoffset:0}.toast{transition:none}}
+</style>
+</head>
+<body>
+
+<main class="accueil">
+  <svg class="route" viewBox="0 0 400 150" role="img" aria-label="Un transfert relie deux continents">
+    <path d="M40 120 Q200 -30 360 100"/>
+    <path class="trace" d="M40 120 Q200 -30 360 100"/>
+    <circle cx="40" cy="120" r="7"/><circle class="halo" cx="40" cy="120" r="14"/>
+    <circle cx="360" cy="100" r="7"/><circle class="halo" cx="360" cy="100" r="14"/>
+  </svg>
+
+  <div class="marque">
+    <svg width="84" height="84" viewBox="0 0 84 84" role="img" aria-label="Logo Niakaté Transfer">
+      <rect width="84" height="84" rx="24" fill="#12305F"/>
+      <path d="M26 60V24l32 36V24" fill="none" stroke="#1CC8C0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="58" cy="24" r="4.5" fill="#fff"/>
+    </svg>
+    <h1>Niakaté <span>Transfer</span></h1>
+    <p>Envoyez de l’argent partout dans le monde, simplement et en confiance.</p>
+  </div>
+
+  <div class="actions">
+    <button class="btn plein" data-go="inscription">Créer un compte</button>
+    <button class="btn contour" data-go="connexion">Se connecter</button>
+    <p class="petit">Prototype : aucun vrai paiement n’est effectué.</p>
+  </div>
+</main>
+
+<section class="guide" aria-labelledby="g">
+  <h2 id="g">Identité visuelle</h2>
+  <p class="intro">Voici les couleurs, les polices et le logo de Niakaté Transfer. Tout l’application s’appuiera dessus.</p>
+
+  <h3>Couleurs</h3>
+  <div class="couleurs">
+    <div class="teinte"><i style="background:#0A1F44"></i><b>Bleu nuit</b><small>#0A1F44 · fond, textes</small></div>
+    <div class="teinte"><i style="background:#12305F"></i><b>Bleu profond</b><small>#12305F · cartes</small></div>
+    <div class="teinte"><i style="background:#1CC8C0"></i><b>Turquoise</b><small>#1CC8C0 · boutons</small></div>
+    <div class="teinte"><i style="background:#F3F7FA;border-bottom:1px solid #DCE5EE"></i><b>Brume</b><small>#F3F7FA · fonds clairs</small></div>
+  </div>
+
+  <h3>Logo</h3>
+  <div class="logos">
+    <div class="sombre">
+      <svg width="52" height="52" viewBox="0 0 84 84"><rect width="84" height="84" rx="24" fill="#12305F"/><path d="M26 60V24l32 36V24" fill="none" stroke="#1CC8C0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="58" cy="24" r="4.5" fill="#fff"/></svg>
+      Sur fond sombre
+    </div>
+    <div class="clair">
+      <svg width="52" height="52" viewBox="0 0 84 84"><rect width="84" height="84" rx="24" fill="#0A1F44"/><path d="M26 60V24l32 36V24" fill="none" stroke="#1CC8C0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="58" cy="24" r="4.5" fill="#fff"/></svg>
+      Sur fond clair
+    </div>
+  </div>
+
+  <h3>Polices</h3>
+  <div class="typo">
+    <div class="t1">Sora : titres et montants</div>
+    <p>Source Sans 3 : textes, boutons et explications. Lisible, même en plein soleil sur un téléphone.</p>
+  </div>
+</section>
+
+<div class="ecran" id="inscription"><div class="cadre">
+<button class="lien" data-go="">← Retour</button>
+<h2>Créer votre compte</h2>
+<p class="doux">Quelques informations suffisent pour commencer.</p>
+<label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name">
+<label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" inputmode="email" autocomplete="email">
+<label for="i-mdp">Mot de passe (8 caractères minimum)</label>
+<div class="champ"><input id="i-mdp" type="password" autocomplete="new-password"><button class="lien" data-oeil="i-mdp">Afficher</button></div>
+<label class="case"><input type="checkbox" id="i-cgu"> J’accepte les conditions d’utilisation (fictives)</label>
+<p class="err" id="e-ins" role="alert"></p>
+<button class="btn plein bloc" id="b-ins">Créer mon compte</button>
+<p class="doux">Déjà inscrit ? <button class="lien" data-go="connexion">Se connecter</button></p>
+</div></div>
+
+<div class="ecran" id="connexion"><div class="cadre">
+<button class="lien" data-go="">← Retour</button>
+<h2>Bon retour</h2>
+<p class="doux">Connectez-vous pour accéder à vos transferts.</p>
+<label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" inputmode="email" autocomplete="email">
+<label for="c-mdp">Mot de passe</label>
+<div class="champ"><input id="c-mdp" type="password" autocomplete="current-password"><button class="lien" data-oeil="c-mdp">Afficher</button></div>
+<p class="err" id="e-con" role="alert"></p>
+<button class="btn plein bloc" id="b-con">Se connecter</button>
+<div class="astuce">Compte de test : demo@niakate.test et mot de passe demo1234</div>
+<p class="doux">Pas encore de compte ? <button class="lien" data-go="inscription">Créer un compte</button></p>
+</div></div>
+
+<div class="ecran" id="verif"><div class="cadre">
+<button class="lien" data-go="inscription">← Retour</button>
+<h2>Vérifiez votre compte</h2>
+<p class="doux">Dans la vraie application, un code serait envoyé par SMS ou e-mail.</p>
+<label for="v-code">Code à 4 chiffres</label><input id="v-code" inputmode="numeric" maxlength="4" autocomplete="one-time-code">
+<p class="err" id="e-ver" role="alert"></p>
+<button class="btn plein bloc" id="b-ver">Valider</button>
+<div class="astuce">Code de test : 1234</div>
+</div></div>
+
+<div class="ecran" id="bienvenue"><div class="cadre">
+<div class="entete"><h2 id="b-nom">Bonjour</h2><svg width="40" height="40" viewBox="0 0 84 84" role="img" aria-label="Niakaté Transfer"><rect width="84" height="84" rx="24" fill="#12305F"/><path d="M26 60V24l32 36V24" fill="none" stroke="#1CC8C0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="58" cy="24" r="4.5" fill="#fff"/></svg></div>
+<button class="lien" id="b-prof" style="min-height:44px">👤 Mon profil</button>
+<div class="carte"><small>Solde disponible</small><div class="montant" id="solde">1 250,00 €</div><small>Solde fictif, pour le prototype</small><br><button class="lien" id="b-oeil">Masquer</button></div>
+<div class="duo"><button class="btn plein" id="b-env">Envoyer de l’argent</button><button class="btn contour" id="b-rec" style="color:var(--texte);border-color:var(--trait)">Recevoir de l’argent</button></div>
+<h3>Pays et devises</h3>
+<div class="pays">
+<button data-taux="France : on part de l’euro (€)."><b>🇫🇷 France</b><span>Euro (EUR)</span></button>
+<button data-taux="Espagne : même devise que la France, l’euro (€). Aucune conversion."><b>🇪🇸 Espagne</b><span>Euro (EUR)</span></button>
+<button data-taux="Sénégal : 1 € = 655,96 FCFA (taux fictif)."><b>🇸🇳 Sénégal</b><span>Franc CFA (XOF)</span></button>
+<button data-taux="Côte d’Ivoire : 1 € = 655,96 FCFA (taux fictif)."><b>🇨🇮 Côte d’Ivoire</b><span>Franc CFA (XOF)</span></button>
+<button data-taux="Mali : 1 € = 655,96 FCFA (taux fictif)."><b>🇲🇱 Mali</b><span>Franc CFA (XOF)</span></button>
+<button data-taux="Cameroun : 1 € = 655,96 FCFA (taux fictif)."><b>🇨🇲 Cameroun</b><span>Franc CFA (XAF)</span></button>
+<button data-taux="Congo-Brazzaville : 1 € = 655,96 FCFA (taux fictif)."><b>🇨🇬 Congo-Brazzaville</b><span>Franc CFA (XAF)</span></button>
+<button data-taux="Maroc : 1 € = 10,80 MAD (taux fictif)."><b>🇲🇦 Maroc</b><span>Dirham (MAD)</span></button>
+<button data-taux="Gabon : 1 € = 655,96 FCFA (taux fictif)."><b>🇬🇦 Gabon</b><span>Franc CFA (XAF)</span></button>
+<button data-taux="Togo : 1 € = 655,96 FCFA (taux fictif)."><b>🇹🇬 Togo</b><span>Franc CFA (XOF)</span></button>
+<button data-taux="Mauritanie : 1 € = 43,00 MRU (taux fictif)."><b>🇲🇷 Mauritanie</b><span>Ouguiya (MRU)</span></button>
+<button data-taux="Angola : 1 € = 1 000,00 AOA (taux fictif)."><b>🇦🇴 Angola</b><span>Kwanza (AOA)</span></button>
+<button data-taux="États-Unis : 1 € = 1,08 $ (taux fictif)."><b>🇺🇸 États-Unis</b><span>Dollar (USD)</span></button>
+</div>
+<p class="doux" style="font-size:.9rem">Touchez un pays pour voir son taux. Tous les taux sont fictifs.</p>
+<input id="r-pays" type="search" placeholder="Chercher un pays du monde" aria-label="Chercher un pays" style="margin-top:10px">
+<div class="pays" id="r-liste" style="flex-wrap:wrap;margin:10px 0 0;padding:0"></div>
+<h3>Derniers transferts</h3>
+<div class="ligne"><div class="av">AD</div><div class="qui"><b>Aminata Diallo</b><small>Dakar, Sénégal, 18 nov.</small></div><div class="mt">−150,00 €<small class="ok">Terminé</small></div></div>
+<div class="ligne"><div class="av">FK</div><div class="qui"><b>Fatou Koné</b><small>Abidjan, Côte d’Ivoire, 19 nov.</small></div><div class="mt">−200,00 €<small>En cours</small></div></div>
+<div class="ligne"><div class="av">MT</div><div class="qui"><b>Moussa Traoré</b><small>Bamako, Mali, 12 nov.</small></div><div class="mt">−80,00 €<small class="ok">Terminé</small></div></div>
+<div class="ligne"><div class="av">KB</div><div class="qui"><b>Karim Benali</b><small>Casablanca, Maroc, 5 nov.</small></div><div class="mt">+60,00 €<small class="ok">Reçu</small></div></div>
+<button class="btn contour bloc" id="b-his" style="color:var(--texte);border-color:var(--trait)">Voir l’historique</button>
+
+
+<button class="btn contour bloc" id="b-out" style="color:var(--texte);border-color:var(--trait)">Se déconnecter</button>
+</div></div>
+
+<div class="ecran" id="envoi"><div class="cadre">
+<button class="lien" data-go="bienvenue">← Retour</button>
+<h2>Envoyer de l’argent</h2>
+<p class="doux">Simulation : aucun vrai paiement n’est effectué.</p>
+<label for="e-dep">Pays de départ</label><select id="e-dep"></select>
+<label for="e-dest">Pays de destination</label><select id="e-dest"></select>
+<label for="e-mt" id="l-mt">Montant à envoyer</label><input id="e-mt" inputmode="numeric" pattern="[0-9]*" placeholder="Ex. 100" autocomplete="off">
+<p class="err" id="e-err" role="alert"></p>
+<div class="recap">
+<div class="rl"><span>Taux de change (fictif)</span><b id="r-taux">—</b></div>
+<div class="rl"><span>Frais (1,5 % + 1 €)</span><b id="r-frais">—</b></div>
+<div class="rl"><span>Total à payer</span><b id="r-total">—</b></div>
+<div class="rl gros"><span>Le bénéficiaire reçoit</span><b id="r-recu">—</b></div>
+</div>
+<button class="btn plein bloc" id="b-cont">Continuer</button>
+</div></div>
+
+<div class="ecran" id="paiement"><div class="cadre">
+<button class="lien" data-go="envoi">← Retour</button>
+<h2>Moyen de paiement</h2>
+<p class="doux">Choisissez comment payer. Simulation : aucun argent réel n’est débité et aucune information bancaire n’est demandée.</p>
+<div class="modes" role="radiogroup" aria-label="Moyen de paiement">
+<button class="mode" role="radio" aria-checked="false" data-mode="Carte bancaire"><span class="ic">💳</span><span><b>Carte bancaire</b><small>Paiement immédiat</small></span><span class="rd"></span></button>
+<button class="mode" role="radio" aria-checked="false" data-mode="Mobile Money"><span class="ic">📱</span><span><b>Mobile Money</b><small>Depuis votre numéro de téléphone</small></span><span class="rd"></span></button>
+<button class="mode" role="radio" aria-checked="false" data-mode="Virement bancaire"><span class="ic">🏦</span><span><b>Virement bancaire</b><small>Reçu sous 1 à 2 jours</small></span><span class="rd"></span></button>
+<button class="mode" role="radio" aria-checked="false" data-mode="Espèces en agence"><span class="ic">🏪</span><span><b>Espèces en agence</b><small>À régler dans un point partenaire</small></span><span class="rd"></span></button>
+</div>
+<p class="err" id="e-pay" role="alert"></p>
+<button class="btn plein bloc" id="b-pay">Continuer</button>
+</div></div>
+
+<div class="ecran" id="recap"><div class="cadre">
+<button class="lien" data-go="paiement">← Retour</button>
+<h2>Récapitulatif</h2>
+<p class="doux">Vérifiez les informations avant de confirmer.</p>
+<div class="recap">
+<div class="rl"><span>Trajet</span><b id="p-trajet"></b></div>
+<div class="rl"><span>Montant envoyé</span><b id="p-mt"></b></div>
+<div class="rl"><span>Frais</span><b id="p-frais"></b></div>
+<div class="rl"><span>Taux (fictif)</span><b id="p-taux"></b></div>
+<div class="rl"><span>Moyen de paiement</span><b id="p-mode"></b></div>
+<div class="rl"><span>Total à payer</span><b id="p-total"></b></div>
+<div class="rl gros"><span>Le bénéficiaire reçoit</span><b id="p-recu"></b></div>
+</div>
+<div class="astuce">Simulation : en confirmant, aucun argent réel n’est débité.</div>
+<button class="btn plein bloc" id="b-conf">Confirmer le transfert</button>
+</div></div>
+
+<div class="ecran" id="confirmation"><div class="cadre" style="text-align:center">
+<div class="coche" aria-hidden="true" style="margin-left:auto;margin-right:auto">✓</div>
+<h2>Transfert confirmé</h2>
+<p class="doux">Votre transfert fictif a bien été enregistré.</p>
+<p class="doux" style="margin-top:18px">Numéro de référence (fictif)</p>
+<div class="ref" id="c-ref"></div>
+<div class="recap" style="text-align:left">
+<div class="rl"><span>Trajet</span><b id="c-trajet"></b></div>
+<div class="rl"><span>Moyen de paiement</span><b id="c-mode"></b></div>
+<div class="rl"><span>Total payé (fictif)</span><b id="c-total"></b></div>
+<div class="rl gros"><span>Le bénéficiaire reçoit</span><b id="c-recu"></b></div>
+</div>
+<button class="btn plein bloc" id="b-retour">Retour au tableau de bord</button>
+</div></div>
+
+<div class="ecran" id="historique"><div class="cadre">
+<button class="lien" data-go="bienvenue">← Retour</button>
+<h2>Historique</h2>
+<p class="doux">Vos transferts fictifs confirmés. Aucun argent réel n’est envoyé.</p>
+<div class="carte" style="margin:12px 0"><small>Solde disponible</small><div class="montant" id="h-solde"></div><small id="h-nb"></small></div>
+<div id="h-liste"></div>
+</div></div>
+
+<div class="ecran" id="profil"><div class="cadre">
+<button class="lien" data-go="bienvenue">← Retour</button>
+<h2>Mon profil</h2>
+<p class="doux">Gérez vos informations. Aucune information bancaire n’est demandée.</p>
+<div class="pav" id="pr-av" aria-hidden="true"></div>
+<label for="pr-nom">Nom complet</label><input id="pr-nom" autocomplete="name" maxlength="60">
+<label for="pr-mail">Adresse e-mail</label><input id="pr-mail" readonly>
+<p class="doux" style="font-size:.9rem;margin-top:6px">L’adresse e-mail ne peut pas être modifiée dans ce prototype.</p>
+<p class="err" id="e-prof" role="alert"></p>
+<p class="succes" id="s-prof" role="status"></p>
+<button class="btn plein bloc" id="b-prof-save">Enregistrer les modifications</button>
+<button class="btn contour bloc" data-go="bienvenue" style="color:var(--texte);border-color:var(--trait)">Retour au tableau de bord</button>
+<button class="btn contour bloc" id="b-prof-out" style="color:var(--texte);border-color:var(--trait)">Se déconnecter</button>
+</div></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var t=document.getElementById('toast'), h;
+  document.querySelectorAll('[data-msg]').forEach(function(b){
+    b.addEventListener('click',function(){
+      t.textContent=b.getAttribute('data-msg'); t.classList.add('on');
+      clearTimeout(h); h=setTimeout(function(){t.classList.remove('on')},2200);
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var t=$('toast'),h;
+function toast(m){t.textContent=m;t.classList.add('on');clearTimeout(h);h=setTimeout(function(){t.classList.remove('on')},2200)}
+var DEMO='demo@niakate.test',comptes={};
+comptes[DEMO]={nom:'Démo Niakaté',mdp:'demo1234'};
+try{var s=JSON.parse(localStorage.getItem('nt_comptes')||'null');if(s)Object.assign(comptes,s)}catch(e){}
+function sauve(){try{var c=Object.assign({},comptes);delete c[DEMO];localStorage.setItem('nt_comptes',JSON.stringify(c))}catch(e){}}
+var ecrans=document.querySelectorAll('.ecran'),attente=null;
+function aller(id){ecrans.forEach(function(e){e.classList.toggle('on',e.id===id);if(e.id===id)e.scrollTop=0});window.scrollTo(0,0)}
+function ok(mail){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)}
+document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){aller(b.getAttribute('data-go'))})});
+document.querySelectorAll('[data-oeil]').forEach(function(b){b.addEventListener('click',function(){var i=$(b.getAttribute('data-oeil')),v=i.type==='password';i.type=v?'text':'password';b.textContent=v?'Masquer':'Afficher'})});
+$('b-ins').addEventListener('click',function(){
+ var nom=$('i-nom').value.trim(),mail=$('i-mail').value.trim().toLowerCase(),mdp=$('i-mdp').value,e=$('e-ins');
+ if(nom.length<2){e.textContent='Entrez votre nom complet.';return}
+ if(!ok(mail)){e.textContent='Cette adresse e-mail n’est pas valide.';return}
+ if(comptes[mail]){e.textContent='Un compte existe déjà avec cet e-mail. Connectez-vous.';return}
+ if(mdp.length<8){e.textContent='Le mot de passe doit contenir au moins 8 caractères.';return}
+ if(!$('i-cgu').checked){e.textContent='Acceptez les conditions pour continuer.';return}
+ e.textContent='';attente={nom:nom,mail:mail,mdp:mdp};$('v-code').value='';$('e-ver').textContent='';aller('verif')});
+$('b-ver').addEventListener('click',function(){
+ if($('v-code').value.trim()!=='1234'){$('e-ver').textContent='Code incorrect. Essayez 1234.';return}
+ if(!attente){aller('inscription');return}
+ comptes[attente.mail]={nom:attente.nom,mdp:attente.mdp};sauve();entrer(attente.nom,attente.mail);attente=null});
+$('b-con').addEventListener('click',function(){
+ var mail=$('c-mail').value.trim().toLowerCase(),mdp=$('c-mdp').value,e=$('e-con'),c=comptes[mail];
+ if(!ok(mail)){e.textContent='Cette adresse e-mail n’est pas valide.';return}
+ if(!c){e.textContent='Aucun compte avec cet e-mail. Créez un compte d’abord.';return}
+ if(c.mdp!==mdp){e.textContent='Mot de passe incorrect.';return}
+ e.textContent='';entrer(c.nom,mail)});
+function entrer(nom,mail){courant=mail;chargeDonnees();if(donnees.nom)nom=donnees.nom;nomCourant=nom;$('b-nom').textContent='Bonjour, '+nom.split(' ')[0];aller('bienvenue');toast('Connexion réussie (fictive)')}
+var DATA="EUR 1 FR DE ES IT PT BE NL LU IE AT FI GR SK SI EE LV LT MT CY HR BG MC AD SM VA ME XK;XOF 655.96 BJ BF CI GW ML NE SN TG;XAF 655.96 CM CF TD CG GQ GA;USD 1.08 US EC SV PA ZW TL FM MH PW;XCD 3.13 GD LC VC AG DM KN;AUD 1.78 AU KI TV NR;CHF 0.93 CH LI;ILS 3.8 IL PS;GBP 0.86 GB;NOK 11.7 NO;SEK 11 SE;DKK 7.46 DK;ISK 150 IS;PLN 4.25 PL;CZK 24.5 CZ;HUF 400 HU;RON 5.1 RO;RSD 117 RS;BAM 1.96 BA;ALL 98 AL;MKD 61.5 MK;MDL 19.5 MD;UAH 48 UA;BYN 3.6 BY;RUB 100 RU;TRY 48 TR;DZD 150 DZ;AOA 1000 AO;BWP 15.5 BW;BIF 3400 BI;CVE 110.27 CV;KMF 491.97 KM;CDF 3300 CD;DJF 206 DJ;EGP 55 EG;ERN 17.4 ER;SZL 20 SZ;ETB 160 ET;GMD 83 GM;GHS 13 GH;GNF 10000 GN;KES 150 KE;LSL 20 LS;LRD 215 LR;LYD 6.3 LY;MGA 5200 MG;MWK 2000 MW;MRU 43 MR;MUR 52 MU;MAD 10.8 MA;MZN 74 MZ;NAD 20 NA;NGN 1700 NG;RWF 1650 RW;STN 24.5 ST;SCR 16 SC;SLE 26 SL;SOS 660 SO;ZAR 20 ZA;SSP 5000 SS;SDG 700 SD;TZS 2900 TZ;TND 3.4 TN;UGX 4200 UG;ZMW 26 ZM;CAD 1.6 CA;MXN 21 MX;GTQ 8.9 GT;BZD 2.3 BZ;HNL 30 HN;NIO 42.5 NI;CRC 585 CR;CUP 28 CU;DOP 70 DO;HTG 152 HT;JMD 183 JM;BSD 1.08 BS;BBD 2.3 BB;TTD 7.9 TT;COP 4400 CO;VES 200 VE;PEN 3.9 PE;BOB 8 BO;BRL 6.2 BR;PYG 8300 PY;UYU 46 UY;ARS 1700 AR;CLP 1080 CL;GYD 242 GY;SRD 43 SR;CNY 8.3 CN;JPY 175 JP;KRW 1650 KR;KPW 1040 KP;MNT 4100 MN;INR 100 IN;PKR 325 PK;BDT 140 BD;LKR 350 LK;NPR 160 NP;BTN 100 BT;MVR 17.9 MV;AFN 77 AF;IRR 49000 IR;IQD 1520 IQ;SYP 15000 SY;LBP 103000 LB;JOD 0.82 JO;SAR 4.35 SA;YER 280 YE;OMR 0.45 OM;AED 4.26 AE;QAR 4.22 QA;BHD 0.44 BH;KWD 0.355 KW;TMT 4.07 TM;UZS 14000 UZ;KZT 600 KZ;KGS 100 KG;TJS 10.8 TJ;AZN 1.97 AZ;AMD 445 AM;GEL 3.15 GE;THB 37.5 TH;VND 30500 VN;LAK 25000 LA;KHR 4650 KH;MMK 2400 MM;MYR 4.9 MY;SGD 1.5 SG;IDR 19000 ID;PHP 66 PH;BND 1.5 BN;TWD 36 TW;HKD 9.05 HK;NZD 1.95 NZ;PGK 4.8 PG;FJD 2.6 FJ;SBD 9.7 SB;VUV 138 VU;WST 3.2 WS;TOP 2.8 TO";
+var PAYS=[],dn=null,dc=null;
+try{dn=new Intl.DisplayNames(['fr'],{type:'region'});dc=new Intl.DisplayNames(['fr'],{type:'currency'})}catch(e){}
+function lib(o,c){try{return o?o.of(c):c}catch(e){return c}}
+DATA.split(';').forEach(function(g){var p=g.split(' ');p.slice(2).forEach(function(i){PAYS.push({iso:i,cur:p[0],taux:parseFloat(p[1]),nom:lib(dn,i),drapeau:String.fromCodePoint.apply(null,i.split('').map(function(x){return 127397+x.charCodeAt(0)}))})})});
+PAYS.sort(function(a,b){return a.nom.localeCompare(b.nom,'fr')});
+window.NT_PAYS=PAYS;
+function msg(p){if(p.cur==='EUR')return p.nom+' : monnaie euro, 1 € = 1 €.';return p.nom+' : 1 € = '+p.taux.toLocaleString('fr-FR',{maximumFractionDigits:p.taux<10?3:2})+' '+p.cur+' (taux fictif).'}
+function puce(p){var b=document.createElement('button'),d=String(lib(dc,p.cur));b.innerHTML='<b></b><span></span>';b.firstChild.textContent=p.drapeau+' '+p.nom;b.lastChild.textContent=d.charAt(0).toUpperCase()+d.slice(1)+' ('+p.cur+')';b.addEventListener('click',function(){toast(msg(p))});return b}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+var champ=$('r-pays'),liste=$('r-liste');
+champ.placeholder='Chercher parmi les '+PAYS.length+' pays du monde';
+champ.addEventListener('input',function(){var q=norm(champ.value.trim());liste.innerHTML='';liste.style.color='';if(!q)return;var res=PAYS.filter(function(p){return norm(p.nom).indexOf(q)>-1||norm(p.cur)===q});res.slice(0,30).forEach(function(p){liste.appendChild(puce(p))});if(!res.length){liste.textContent='Aucun pays trouvé.';liste.style.color='var(--doux)'}});
+var cache=false;
+$('b-oeil').addEventListener('click',function(){cache=!cache;majSolde();this.textContent=cache?'Afficher':'Masquer'});
+$('b-env').addEventListener('click',function(){aller('envoi');calc()});
+$('b-rec').addEventListener('click',function(){toast('La réception d’argent sera ajoutée bientôt.')});
+$('b-his').addEventListener('click',function(){aller('historique');rendreHist()});
+document.querySelectorAll('[data-taux]').forEach(function(b){b.addEventListener('click',function(){toast(b.getAttribute('data-taux'))})});
+var P=[['France','🇫🇷','EUR','€',1],['Espagne','🇪🇸','EUR','€',1],['Sénégal','🇸🇳','XOF','FCFA',655.96],['Côte d’Ivoire','🇨🇮','XOF','FCFA',655.96],['Mali','🇲🇱','XOF','FCFA',655.96],['Cameroun','🇨🇲','XAF','FCFA',655.96],['Congo-Brazzaville','🇨🇬','XAF','FCFA',655.96],['Maroc','🇲🇦','MAD','MAD',10.8],['Gabon','🇬🇦','XAF','FCFA',655.96],['Togo','🇹🇬','XOF','FCFA',655.96],['Mauritanie','🇲🇷','MRU','MRU',43],['Angola','🇦🇴','AOA','AOA',1000],['États-Unis','🇺🇸','USD','$',1.08]];
+var dep=$('e-dep'),dest=$('e-dest'),mt=$('e-mt'),cont=$('b-cont'),cmd=null;
+P.forEach(function(p,i){[dep,dest].forEach(function(sel){var o=document.createElement('option');o.value=i;o.textContent=p[1]+' '+p[0];sel.appendChild(o)})});
+dep.value=0;dest.value=2;
+function f(n){return n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function m(n,p){return f(n)+' '+p[3]}
+function raz(){['r-frais','r-total','r-recu'].forEach(function(i){$(i).textContent='—'})}
+function calc(){
+ var a=P[dep.value],b=P[dest.value],err=$('e-err'),rate=b[4]/a[4];cmd=null;
+ $('l-mt').textContent='Montant à envoyer ('+a[2]+')';
+ $('r-taux').textContent=rate>=1?'1 '+a[3]+' = '+f(rate)+' '+b[3]:'1 '+b[3]+' = '+f(1/rate)+' '+a[3];
+ if(dep.value===dest.value){err.textContent='Choisissez deux pays différents.';raz();return}
+ if(!mt.value.trim()){err.textContent='';raz();return}
+ var v=parseFloat(mt.value.replace(/\s/g,'').replace(',','.'));
+ if(isNaN(v)||v<=0){err.textContent='Entrez un montant valide, par exemple 100.';raz();return}
+ if(v/a[4]<10){err.textContent='Montant minimum : environ '+m(Math.ceil(10*a[4]),a)+'.';raz();return}
+ var frais=Math.round((v*0.015+a[4]+1e-9)*100)/100,total=Math.round((v+frais+1e-9)*100)/100,recu=v*rate;
+ if(Math.round(total/a[4]*100)>donnees.solde){err.textContent='Solde fictif insuffisant ('+f(donnees.solde/100)+' € disponibles).';raz();return}
+ err.textContent='';
+ $('r-frais').textContent=m(frais,a);$('r-total').textContent=m(total,a);$('r-recu').textContent=m(recu,b);
+ cmd={dep:a[0],dest:b[0],montant:v,frais:frais,total:total,recu:recu,a:a,b:b,rate:rate};cont.disabled=false}
+dep.addEventListener('change',calc);dest.addEventListener('change',calc);mt.setAttribute('maxlength','9');
+var prev='';
+mt.addEventListener('input',function(){var raw=mt.value,av='';
+ if(/\D/.test(raw)){mt.value=prev;
+  av=/[-−–]/.test(raw)?'Les montants négatifs ne sont pas acceptés.':/[A-Za-zÀ-ÿ]/.test(raw)?'Les lettres ne sont pas acceptées. Entrez uniquement des chiffres.':'Les caractères spéciaux ne sont pas acceptés. Entrez uniquement des chiffres.'}
+ else prev=raw;
+ calc();
+ if(av)$('e-err').textContent=av;else if(!mt.value)$('e-err').textContent='Veuillez entrer un montant.'});
+cont.addEventListener('click',function(){if(!cmd&&!mt.value.trim()){$('e-err').textContent='Veuillez entrer un montant avant de continuer.';mt.focus();return}if(cmd)ouvrePaiement()});
+var mode=null,cde=null,MODES=document.querySelectorAll('.mode');
+function ouvrePaiement(){cde=cmd;mode=null;MODES.forEach(function(x){x.setAttribute('aria-checked','false')});$('e-pay').textContent='';aller('paiement')}
+MODES.forEach(function(x){x.addEventListener('click',function(){mode=x.getAttribute('data-mode');MODES.forEach(function(y){y.setAttribute('aria-checked',y===x?'true':'false')});$('e-pay').textContent=''})});
+$('b-pay').addEventListener('click',function(){
+ if(!cde)return;
+ if(!mode){$('e-pay').textContent='Choisissez un moyen de paiement pour continuer.';return}
+ var a=cde.a,b=cde.b,r=cde.rate;
+ $('p-trajet').textContent=a[1]+' '+a[0]+' → '+b[1]+' '+b[0];
+ $('p-mt').textContent=m(cde.montant,a);$('p-frais').textContent=m(cde.frais,a);
+ $('p-taux').textContent=r>=1?'1 '+a[3]+' = '+f(r)+' '+b[3]:'1 '+b[3]+' = '+f(1/r)+' '+a[3];
+ $('p-mode').textContent=mode;$('p-total').textContent=m(cde.total,a);$('p-recu').textContent=m(cde.recu,b);
+ aller('recap')});
+$('b-conf').addEventListener('click',function(){
+ if(!cde)return;
+ if(cde.fait){toast('Ce transfert est déjà enregistré.');return}
+ var cts=Math.round(cde.total/cde.a[4]*100);
+ if(cts>donnees.solde){toast('Solde fictif insuffisant : transfert non enregistré.');return}
+ var d=new Date(),al='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r='',i;
+ for(i=0;i<6;i++)r+=al.charAt(Math.floor(Math.random()*al.length));
+ $('c-ref').textContent='NT-'+String(d.getFullYear()).slice(2)+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2)+'-'+r;
+ $('c-trajet').textContent=$('p-trajet').textContent;$('c-mode').textContent=mode;
+ $('c-total').textContent=$('p-total').textContent;$('c-recu').textContent=$('p-recu').textContent;
+ if(!enregistrer(cde,cts,$('c-ref').textContent)){toast('Ce transfert est déjà enregistré.');return}
+ aller('confirmation')});
+$('b-retour').addEventListener('click',function(){mt.value='';prev='';cde=null;mode=null;aller('bienvenue');calc()});
+var courant='',donnees={solde:125000,hist:[]};
+function cle(){return 'nt_d_'+courant}
+function fm(n,s){return f(n)+' '+s}
+function majSolde(){var tx=cache?'•••• €':f(donnees.solde/100)+' €';$('solde').textContent=tx;$('h-solde').textContent=tx}
+function chargeDonnees(){donnees={solde:125000,hist:[]};try{var sv=JSON.parse(localStorage.getItem(cle())||'null');if(sv&&typeof sv.solde==='number'&&Array.isArray(sv.hist))donnees=sv}catch(e){}majSolde();rendreHist()}
+function sauveDonnees(){try{localStorage.setItem(cle(),JSON.stringify(donnees))}catch(e){return false}return true}
+function enregistrer(c,cts,ref){
+ if(c.fait||donnees.hist.some(function(x){return x.ref===ref}))return false;
+ c.fait=true;donnees.solde-=cts;
+ donnees.hist.unshift({ref:ref,ts:Date.now(),dep:c.a[0],fd:c.a[1],dest:c.b[0],fe:c.b[1],mt:c.montant,frais:c.frais,total:c.total,recu:c.recu,sd:c.a[3],sr:c.b[3],mode:mode,statut:'Confirmé'});
+ if(!sauveDonnees())toast('Données non conservées : le stockage du téléphone est bloqué.');
+ majSolde();rendreHist();return true}
+function rendreHist(){
+ var L=$('h-liste'),n=donnees.hist.length;L.innerHTML='';
+ $('h-nb').textContent=n?n+(n>1?' transferts enregistrés':' transfert enregistré'):'Aucun transfert pour l’instant';
+ if(!n){var pp=document.createElement('p');pp.className='doux';pp.textContent='Aucun transfert pour l’instant. Envoyez de l’argent pour le voir apparaître ici.';L.appendChild(pp);return}
+ donnees.hist.forEach(function(x){
+  var c=document.createElement('div'),th=document.createElement('div'),tb=document.createElement('b'),bd=document.createElement('span');
+  c.className='recap';c.style.margin='12px 0';th.className='th';bd.className='badge';
+  tb.textContent=x.fd+' '+x.dep+' → '+x.fe+' '+x.dest;bd.textContent=x.statut;th.appendChild(tb);th.appendChild(bd);c.appendChild(th);
+  [['Montant envoyé',fm(x.mt,x.sd)],['Frais',fm(x.frais,x.sd)],['Total payé',fm(x.total,x.sd)],['Le bénéficiaire reçoit',fm(x.recu,x.sr)],['Moyen de paiement',x.mode],['Date et heure',new Date(x.ts).toLocaleString('fr-FR',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})],['Référence',x.ref]].forEach(function(r){
+   var l=document.createElement('div'),k=document.createElement('span'),v=document.createElement('b');
+   l.className='rl';k.textContent=r[0];v.textContent=r[1];l.appendChild(k);l.appendChild(v);c.appendChild(l)});
+  L.appendChild(c)})}
+var nomCourant='';
+function initiales(n){return n.split(' ').filter(Boolean).slice(0,2).map(function(w){return w.charAt(0).toUpperCase()}).join('')}
+function majProfil(){$('pr-nom').value=nomCourant;$('pr-mail').value=courant;$('pr-av').textContent=initiales(nomCourant);$('e-prof').textContent='';$('s-prof').textContent=''}
+$('b-prof').addEventListener('click',function(){majProfil();aller('profil')});
+$('pr-nom').addEventListener('input',function(){$('e-prof').textContent='';$('s-prof').textContent=''});
+$('b-prof-save').addEventListener('click',function(){
+ var nv=$('pr-nom').value.trim().replace(/\s+/g,' '),e=$('e-prof'),s2=$('s-prof');
+ e.textContent='';s2.textContent='';
+ if(nv.length<2){e.textContent='Entrez votre nom complet (2 caractères minimum).';return}
+ if(nv.length>60){e.textContent='Le nom est trop long (60 caractères maximum).';return}
+ if(nv===nomCourant){toast('Aucune modification à enregistrer.');return}
+ nomCourant=nv;donnees.nom=nv;
+ if(comptes[courant]){comptes[courant].nom=nv;sauve()}
+ var okd=sauveDonnees();
+ $('pr-nom').value=nv;$('pr-av').textContent=initiales(nv);
+ $('b-nom').textContent='Bonjour, '+nv.split(' ')[0];
+ if(okd){s2.textContent='✓ Profil enregistré avec succès.';toast('Profil enregistré avec succès.')}
+ else e.textContent='Profil modifié, mais non conservé : le stockage du téléphone est bloqué.'});
+$('b-prof-out').addEventListener('click',function(){$('b-out').click()});
+$('b-out').addEventListener('click',function(){['c-mail','c-mdp','i-nom','i-mail','i-mdp'].forEach(function(i){$(i).value=''});$('i-cgu').checked=false;aller('');toast('Vous êtes déconnecté')});
+})();
+</script>
+</body>
+</html>
