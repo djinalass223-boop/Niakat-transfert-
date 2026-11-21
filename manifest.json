@@ -1,0 +1,13 @@
+{
+  "background_color": "#0b1f3a",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Niakate transfert",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Niakate",
+  "start_url": "/",
+  "theme_color": "#00c9b7",
+  "id": "/",
+  "description": "Niakate transfert est une application de démonstration pour découvrir les transferts internationaux entre plusieurs pays."
+}
