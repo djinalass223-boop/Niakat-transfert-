@@ -13,12 +13,12 @@
   ,
   "icons": [
   {
-    "src": "icons/icon-192.png",
+    "src": "file_0000000068b881f4a1cdd83e0ae3b18c.png"
     "sizes": "192x192",
     "type": "image/png"
   },
   {
-    "src": "icons/icon-512.png",
+    "src": "file_0000000068b881f4a1cdd83e0ae3b18c.png"
     "sizes": "512x512",
     "type": "image/png"
   }
