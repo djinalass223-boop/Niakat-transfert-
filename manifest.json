@@ -4,10 +4,10 @@
   "display": "standalone",
   "name": "Niakate transfert",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/Niakat-transfert-/",
   "short_name": "Niakate",
-  "start_url": "/",
+  "start_url": "/Niakat-transfert-/",
   "theme_color": "#00c9b7",
-  "id": "/",
+  "id": "/Niakat-transfert-/",
   "description": "Niakate transfert est une application de démonstration pour découvrir les transferts internationaux entre plusieurs pays."
 }
