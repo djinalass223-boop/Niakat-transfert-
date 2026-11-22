@@ -504,5 +504,12 @@ $('b-prof-out').addEventListener('click',function(){$('b-out').click()});
 $('b-out').addEventListener('click',function(){['c-mail','c-mdp','i-nom','i-mail','i-mdp'].forEach(function(i){$(i).value=''});$('i-cgu').checked=false;aller('');toast('Vous êtes déconnecté')});
 })();
 </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./pwabuilder-sw.js");
+  });
+}
+  </script>
 </body>
 </html>
